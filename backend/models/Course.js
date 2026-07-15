@@ -34,6 +34,27 @@ const ModuleSchema = new mongoose.Schema(
   { _id: true }
 );
 
+// One multiple-choice question for a course's certification exam pool.
+// `correctAnswer` stores the letter ('A'|'B'|'C'|'D') so backend grading
+// can compare directly against the submitted option letter.
+const ExamQuestionSchema = new mongoose.Schema(
+  {
+    question: { type: String, required: true, trim: true },
+    options: {
+      type: {
+        A: { type: String, required: true },
+        B: { type: String, required: true },
+        C: { type: String, required: true },
+        D: { type: String, required: true },
+      },
+      required: true,
+    },
+    correctAnswer: { type: String, enum: ['A', 'B', 'C', 'D'], required: true },
+    explanation: { type: String, default: '' }, // optional, shown after grading
+  },
+  { _id: true }
+);
+
 const CourseSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true, index: true },
@@ -52,6 +73,9 @@ const CourseSchema = new mongoose.Schema(
     tags: [{ type: String, trim: true }],
     modules: [ModuleSchema],
     isPublished: { type: Boolean, default: true },
+    // Certification exam pool — used to generate/grade the final exam a
+    // learner must pass to receive their Course Completion Certificate.
+    finalAssessment: [ExamQuestionSchema],
   },
   { timestamps: true }
 );
