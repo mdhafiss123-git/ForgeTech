@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const UserSchema = new mongoose.Schema(
   {
@@ -45,6 +46,11 @@ const UserSchema = new mongoose.Schema(
       currentStreakDays: { type: Number, default: 0 },
       lastActiveAt: { type: Date, default: Date.now },
     },
+    // Password reset flow — store a HASH of the token, never the raw token,
+    // the same way passwords are hashed. The raw token only ever exists in
+    // the emailed link and the request body; the DB only ever sees the hash.
+    resetPasswordToken: { type: String, select: false },
+    resetPasswordExpires: { type: Date, select: false },
   },
   { timestamps: true }
 );
@@ -58,6 +64,18 @@ UserSchema.pre('save', async function hashPassword(next) {
 
 UserSchema.methods.comparePassword = function comparePassword(candidate) {
   return bcrypt.compare(candidate, this.password);
+};
+
+// Generates a random reset token, stores its HASH + a 15-minute expiry on
+// the user document, and returns the RAW token (only this raw value goes
+// into the emailed link — the DB never stores it in plaintext).
+UserSchema.methods.createPasswordResetToken = function createPasswordResetToken() {
+  const rawToken = crypto.randomBytes(32).toString('hex');
+
+  this.resetPasswordToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+  this.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+  return rawToken;
 };
 
 module.exports = mongoose.model('User', UserSchema);
