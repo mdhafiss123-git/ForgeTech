@@ -44,7 +44,14 @@ const getCourses = asyncHandler(async (req, res) => {
  * If the request is authenticated, also attaches the user's progress doc.
  */
 const getCourseBySlug = asyncHandler(async (req, res) => {
-  const course = await Course.findOne({ slug: req.params.slug, isPublished: true });
+  // Exclude finalAssessment — this endpoint is reachable by unauthenticated
+  // visitors (public course details) as well as the lesson viewer, and
+  // must never expose exam questions/correct answers. A dedicated,
+  // auth-gated exam endpoint should be added when the exam-taking flow
+  // is built, returning questions WITHOUT correctAnswer, then grading
+  // server-side against the stored value.
+  const course = await Course.findOne({ slug: req.params.slug, isPublished: true })
+    .select('-finalAssessment');
 
   if (!course) {
     res.statusCode = 404;
