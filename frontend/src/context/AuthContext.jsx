@@ -46,9 +46,17 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  // Used after a successful password reset — the reset endpoint returns a
+  // fresh JWT + user object directly, so the user lands signed in rather
+  // than being bounced back to a plain login form after resetting.
+  const setSessionFromToken = (token, userData) => {
+    localStorage.setItem('techforge_token', token);
+    setUser(userData);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, isAuthenticated: !!user, login, register, logout, refresh: loadMe }}
+      value={{ user, loading, isAuthenticated: !!user, login, register, logout, refresh: loadMe, setSessionFromToken }}
     >
       {children}
     </AuthContext.Provider>
