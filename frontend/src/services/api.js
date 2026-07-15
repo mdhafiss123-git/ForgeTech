@@ -25,5 +25,9 @@ export const markLessonComplete = (courseId, lessonId) =>
 // --- Auth ---
 export const loginRequest = (payload) => api.post('/auth/login', payload).then((r) => r.data);
 export const registerRequest = (payload) => api.post('/auth/register', payload).then((r) => r.data);
+export const forgotPasswordRequest = (email) =>
+  api.post('/auth/forgot-password', { email }).then((r) => r.data);
+export const resetPasswordRequest = (token, password) =>
+  api.post(`/auth/reset-password/${token}`, { password }).then((r) => r.data);
 
 export default api;
