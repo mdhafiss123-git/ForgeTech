@@ -10,6 +10,8 @@ import DashboardPage from './pages/DashboardPage';
 import CourseViewerPage from './pages/CourseViewerPage';
 import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import { pageTransition } from './animations/motionVariants';
 
 // Soft opacity + directional transition between routes. Kept subtle so
@@ -77,6 +79,14 @@ function AppRoutes() {
         <Route
           path="/login"
           element={user ? <Navigate to="/dashboard" replace /> : <PageTransition><LoginPage /></PageTransition>}
+        />
+        <Route
+          path="/forgot-password"
+          element={user ? <Navigate to="/dashboard" replace /> : <PageTransition><ForgotPasswordPage /></PageTransition>}
+        />
+        <Route
+          path="/reset-password/:token"
+          element={user ? <Navigate to="/dashboard" replace /> : <PageTransition><ResetPasswordPage /></PageTransition>}
         />
 
         {/* ---------- Private: require a logged-in user ---------- */}
