@@ -84,7 +84,17 @@ export default function LoginPage() {
               <Field label="Full name" name="name" value={form.name} onChange={handleChange} />
             )}
             <Field label="Email" name="email" type="email" value={form.email} onChange={handleChange} />
-            <Field label="Password" name="password" type="password" value={form.password} onChange={handleChange} />
+            <div>
+              <Field label="Password" name="password" type="password" value={form.password} onChange={handleChange} />
+              {mode === 'login' && (
+                <Link
+                  to="/forgot-password"
+                  className="mt-1.5 inline-block text-xs text-accent-indigo hover:text-indigo-700 font-medium"
+                >
+                  Forgot password?
+                </Link>
+              )}
+            </div>
 
             {error && <p className="text-sm text-rose-600">{error}</p>}
 
