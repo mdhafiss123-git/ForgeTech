@@ -30,4 +30,11 @@ export const forgotPasswordRequest = (email) =>
 export const resetPasswordRequest = (token, password) =>
   api.post(`/auth/reset-password/${token}`, { password }).then((r) => r.data);
 
+// --- Exams & Certificates ---
+export const fetchExam = (slug) => api.get(`/exams/${slug}`).then((r) => r.data);
+export const submitExam = (slug, answers) =>
+  api.post(`/exams/${slug}/submit`, { answers }).then((r) => r.data);
+export const fetchCertificate = (certificateId) =>
+  api.get(`/certificates/${certificateId}`).then((r) => r.data);
+
 export default api;
