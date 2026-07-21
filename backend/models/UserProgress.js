@@ -39,6 +39,18 @@ const UserProgressSchema = new mongoose.Schema(
     },
     startedAt: { type: Date, default: Date.now },
     completedAt: { type: Date, default: null },
+    // Certification exam tracking — separate from lesson completion, since
+    // a student can finish every lesson (completionPercent: 100) without
+    // yet having passed the exam required for the certificate.
+    examAttempts: [
+      {
+        score: { type: Number, required: true }, // percent, 0-100
+        passed: { type: Boolean, required: true },
+        attemptedAt: { type: Date, default: Date.now },
+      },
+    ],
+    examPassed: { type: Boolean, default: false },
+    certificateId: { type: String, default: null }, // set once, on first pass
   },
   { timestamps: true }
 );
