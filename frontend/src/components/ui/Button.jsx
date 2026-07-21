@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { buttonTap } from '../../animations/motionVariants';
 
 const VARIANTS = {
   primary: 'bg-accent-indigo hover:bg-indigo-700 text-white shadow-glow',
@@ -11,10 +10,8 @@ const VARIANTS = {
 export default function Button({ children, variant = 'primary', className = '', icon: Icon, ...props }) {
   return (
     <motion.button
-      variants={buttonTap}
-      initial="rest"
-      whileHover="hover"
-      whileTap="tap"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.97 }}
       className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
         transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none
         ${VARIANTS[variant]} ${className}`}
